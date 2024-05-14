@@ -1,0 +1,282 @@
+databaseChangeLog:
+  - changeSet:
+      id: 01-create-roles-table
+      author: kaliev1910
+      changes:
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+  - changeSet:
+      id: 03-insert-roles-data
+      author: kaliev1910
+      changes:
+        - sql:
+            sql: INSERT INTO roles (name) VALUES
+              ('Cafe'),
+              ('Customer');
+  - changeSet:
+      id: 003-create-users-table
+      author: Kaliev1910
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: email
+                  type: varchar(255)
+              - column:
+                  name: password
+                  type: varchar(255)
+              - column:
+                  name: role_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_users_role
+                    references: roles(id)
+                    onDelete: CASCADE
+                    onUpdate: CASCADE
+              - column:
+                  name: enabled
+                  type: boolean
+                  constraints:
+                    nullable: true
+  - changeSet:
+      id: 05-create-cafe-table
+      author: kaliev1910
+      changes:
+        - createTable:
+            tableName: Cafes
+            columns:
+              - column:
+                  name: cafe_id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_cafe_user
+                    references: users(id)
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: description
+                  type: varchar(355)
+              - column:
+                  name: address
+                  type: varchar(255)
+              - column:
+                  name: phone_number
+                  type: varchar(20)
+  - changeSet:
+      id: 07-create-dishes-table
+      author: kaliev1910
+      changes:
+        - createTable:
+            tableName: Dishes
+            columns:
+              - column:
+                  name: dish_id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: cafe_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_dish_cafe
+                    references: cafes(cafe_id)
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+              - column:
+                  name: description
+                  type: varchar(1000)
+              - column:
+                  name: price
+                  type: decimal(10, 2)
+                  defaultValueNumeric: 0.00
+              - column:
+                  name: image
+                  type: varchar(255)
+
+  - changeSet:
+      id: 09-create-cart-table
+      author: kaliev1910
+      changes:
+        - createTable:
+            tableName: Cart
+            columns:
+              - column:
+                  name: cart_id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: customer_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_customer_cart
+                    references: users(id)
+              - column:
+                  name: dish_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_cart_dish
+                    references: dishes(dish_id)
+              - column:
+                  name: quantity
+                  type: INT
+              - column:
+                  name: total
+                  type: DECIMAL(10, 2)
+
+  - changeSet:
+      id: 010-create-ratings-table
+      author: kaliev1910
+      changes:
+        - createTable:
+            tableName: Ratings
+            columns:
+              - column:
+                  name: rating_id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: customer_user_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_rating_customer
+                    references: users(id)
+              - column:
+                  name: cafe_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_rating_cafe
+                    references: cafes(cafe_id)
+              - column:
+                  name: rating
+                  type: INT
+              - column:
+                  name: timestamp
+                  type: TIMESTAMP
+
+  - changeSet:
+      id: 11-create-messages-table
+      author: kaliev1910
+      changes:
+        - createTable:
+            tableName: Messages
+            columns:
+              - column:
+                  name: message_id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: sender_user_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_message_sender
+                    references: users(id)
+              - column:
+                  name: receiver_user_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_message_receiver
+                    references: users(id)
+              - column:
+                  name: message_text
+                  type: TEXT
+              - column:
+                  name: timestamp
+                  type: TIMESTAMP
+
+  - changeSet:
+      id: 012-create-comment-table
+      author: kaliev1910
+      changes:
+        - createTable:
+            tableName: Comment
+            columns:
+              - column:
+                  name: comment_id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: sender_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_comment_sender
+                    references: users(id)
+              - column:
+                  name: cafe_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_comment_cafe
+                    references: cafes(cafe_id)
+              - column:
+                  name: time
+                  type: TIMESTAMP
+
+  - changeSet:
+      id: drop  fk_cart_dish
+      author: kaliev1910
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: cart
+            constraintName: fk_cart_dish
+  - changeSet:
+      id: add fk_resumes_user
+      author: kaliev1910
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: cart
+            baseColumnNames: dish_id
+            constraintName: fk_cart_dish
+            referencedTableName: dishes
+            referencedColumnNames: dish_id
+            onDelete: cascade
+            onUpdate: cascade
