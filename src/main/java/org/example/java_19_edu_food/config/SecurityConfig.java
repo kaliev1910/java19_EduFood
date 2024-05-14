@@ -55,12 +55,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/").permitAll()
-                        .requestMatchers("/dishes/add").hasAuthority("Company")
-                        .requestMatchers("dishes/delete/{foodId}").hasAuthority("Company")
-                        .requestMatchers("dishes/deleteCart/{cartId}").hasAuthority("Buyer")
+                        .requestMatchers("/dishes/add").hasAuthority("Cafe")
+                        .requestMatchers("dishes/delete/{foodId}").hasAuthority("Cafe")
+                        .requestMatchers("dishes/deleteCart/{cartId}").hasAuthority("Customer")
                         .requestMatchers("/cart/add").hasAuthority("Buyer")
-                        .requestMatchers("/profile/updateQty/{cartId}").hasAuthority("Buyer")
-                        .requestMatchers("/dishes/{restaurantId}").permitAll()
+                        .requestMatchers("/profile/updateQty/{cartId}").hasAuthority("Customer")
+                        .requestMatchers("/dishes/{cafe}").permitAll()
                         .anyRequest().fullyAuthenticated()
                 );
         return http.build();
